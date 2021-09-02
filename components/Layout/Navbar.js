@@ -10,7 +10,7 @@ function Navbar() {
 
 
   return (
-    <Menu fixed="top" fluid style={{ backgroundColor: "#264348" }}>
+    <Menu borderless  fluid style={{ backgroundColor: "#264348" }}>
       <Container text >
         <Link href="/login">
           <Menu.Item header active={isActive('/login')} style={{ color: "white" }}>
