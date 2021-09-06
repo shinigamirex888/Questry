@@ -1,4 +1,6 @@
 import React,{useState,useEffect,useRef} from 'react'
+import { loginUser } from "../utils/authUser";
+
 import { Form,Button,Segment,TextArea,Divider , Grid, Header, Message,} from 'semantic-ui-react';
 
 import baseUrl from './../utils/baseUrl';
@@ -27,7 +29,11 @@ function Login() {
   };
 
 
-  const handleSubmit=e=>e.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    await loginUser(user, setErrorMsg, setFormLoading);
+  };
 
   useEffect(() => {
     const isUser = Object.values({ email, password }).every(item => Boolean(item));

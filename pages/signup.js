@@ -1,89 +1,122 @@
-import React,{useState,useEffect,useRef} from 'react'
-import { Form,Button,Segment,TextArea,Divider , Grid, Header, Message,} from 'semantic-ui-react';
-import baseUrl from './../utils/baseUrl';
-import axios from 'axios'; 
-import {FooterMessage, HeaderMessage} from "../components/Common/WelcomeMessage"
-
-import CommonInputs from '../components/Common/CommonInputs';
-import ImageDropDiv from '../components/Common/ImageDropDiv';
-
-
-
+import React, { useState, useEffect, useRef } from "react";
+import { Form, Button, Message, Segment, Divider } from "semantic-ui-react";
+import CommonInputs from "../components/Common/CommonInputs";
+import ImageDropDiv from "../components/Common/ImageDropDiv";
+import { HeaderMessage, FooterMessage } from "../components/Common/WelcomeMessage";
+import axios from "axios";
+import baseUrl from "../utils/baseUrl";
+import { registerUser } from "../utils/authUser";
+import uploadPic from "../utils/uploadPicToCloudinary";
 const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+let cancel;
 
 function Signup() {
-    const [user,setUser] = useState({
-        name: "",
-        email: "",
-        password: "",
-        bio: "",
-        linkedin: "",
-        twitter: "",
-        github: "",
-        portfolio: "",
-    });
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    bio: "",
+    facebook: "",
+    youtube: "",
+    twitter: "",
+    instagram: ""
+  });
 
-    const{name,email,password,bio}=user
+  const { name, email, password, bio } = user;
 
+  const handleChange = e => {
+    const { name, value, files } = e.target;
 
-    const handleChange = (e) => {
-        const { name, value,files } = e.target;
-
-        if (name === "media") {
-            setMedia(files[0]);
-            setMediaPreview(URL.createObjectURL(files[0]));
-          }
-      
-          setUser(prev => ({ ...prev, [name]: value }));
-
-        
+    if (name === "media") {
+      setMedia(files[0]);
+      setMediaPreview(URL.createObjectURL(files[0]));
     }
 
+    setUser(prev => ({ ...prev, [name]: value }));
+  };
 
+  const [showSocialLinks, setShowSocialLinks] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [formLoading, setFormLoading] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
 
-    const [showSocialLinks,setShowSocialLinks] = useState(false)
-    const [showPassword,setShowPassword] = useState(false)
-    const [errorMsg,setErrorMsg] = useState(null)
-    const[formLoading,setFormLoading] = useState(false)
-    const [submitDisabled,setSubmitDisabled] = useState(true)
+  const [username, setUsername] = useState("");
+  const [usernameLoading, setUsernameLoading] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState(false);
 
-    const [username,setUsername] = useState('')
-    const [usernameLoading,setUsernameLoading] = useState(false)
-    const [usernameAvailable,setUsernameAvailable] = useState(false)
+  const [media, setMedia] = useState(null);
+  const [mediaPreview, setMediaPreview] = useState(null);
+  const [highlighted, setHighlighted] = useState(false);
+  const inputRef = useRef();
 
+  useEffect(() => {
+    const isUser = Object.values({ name, email, password, bio }).every(item =>
+      Boolean(item)
+    );
+    isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
+  }, [user]);
 
-    const [media, setMedia] = useState(null);
-    const [mediaPreview, setMediaPreview] = useState(null);
-    const [highlighted, setHighlighted] = useState(false);
-    const inputRef = useRef();
+  const checkUsername = async () => {
+    setUsernameLoading(true);
+    try {
+      cancel && cancel();
 
-    const handleSubmit=e=>e.preventDefault();
+      const CancelToken = axios.CancelToken;
 
-    useEffect(() => {
-        const isUser = Object.values({ name, email, password, bio }).every(item =>
-          Boolean(item)
-        );
-        isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
-      }, [user]);
+      const res = await axios.get(`${baseUrl}/api/signup/${username}`, {
+        cancelToken: new CancelToken(canceler => {
+          cancel = canceler;
+        })
+      });
 
+      if (errorMsg !== null) setErrorMsg(null);
 
-    return (
-       <>
-       <Grid  centered columns={2}>
-       <Grid.Column>
-       <Segment>
-       <HeaderMessage/>
+      if (res.data === "Available") {
+        setUsernameAvailable(true);
+        setUser(prev => ({ ...prev, username }));
+      }
+    } catch (error) {
+      setErrorMsg("Username Not Available");
+      setUsernameAvailable(false);
+    }
+    setUsernameLoading(false);
+  };
 
-       <Form loading={formLoading} error={errorMsg !== null} onSubmit={handleSubmit}>
+  useEffect(() => {
+    username === "" ? setUsernameAvailable(false) : checkUsername();
+  }, [username]);
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setFormLoading(true);
+
+    let profilePicUrl;
+    if (media !== null) {
+      profilePicUrl = await uploadPic(media);
+    }
+
+    if (media !== null && !profilePicUrl) {
+      setFormLoading(false);
+      return setErrorMsg("Error Uploading Image");
+    }
+
+    await registerUser(user, profilePicUrl, setErrorMsg, setFormLoading);
+  };
+
+  return (
+    <>
+      <HeaderMessage />
+      <Form loading={formLoading} error={errorMsg !== null} onSubmit={handleSubmit}>
         <Message
           error
           header="Oops!"
           content={errorMsg}
           onDismiss={() => setErrorMsg(null)}
         />
-        
-            <Segment >
-            <ImageDropDiv
+
+        <Segment>
+          <ImageDropDiv
             mediaPreview={mediaPreview}
             setMediaPreview={setMediaPreview}
             setMedia={setMedia}
@@ -92,18 +125,19 @@ function Signup() {
             setHighlighted={setHighlighted}
             handleChange={handleChange}
           />
-            <Form.Input
-                required
-                label="Name"
-                placeholder="Name"
-                name="name"
-                value={name}
-                onChange={handleChange}
-                fluid
-                icon="user"
-                iconPosition="left"            
+          <Form.Input
+            required
+            label="Name"
+            placeholder="Name"
+            name="name"
+            value={name}
+            onChange={handleChange}
+            fluid
+            icon="user"
+            iconPosition="left"
           />
-            <Form.Input
+
+          <Form.Input
             required
             label="Email"
             placeholder="Email"
@@ -115,7 +149,8 @@ function Signup() {
             iconPosition="left"
             type="email"
           />
-            <Form.Input
+
+          <Form.Input
             label="Password"
             placeholder="Password"
             name="password"
@@ -133,7 +168,7 @@ function Signup() {
             required
           />
 
-        <Form.Input
+          <Form.Input
             loading={usernameLoading}
             error={!usernameAvailable}
             required
@@ -160,28 +195,20 @@ function Signup() {
             handleChange={handleChange}
           />
 
-        <Divider hidden />
-
-
+          <Divider hidden />
           <Button
             icon="signup"
             content="Signup"
             type="submit"
-            color="green"
+            color="orange"
             disabled={submitDisabled || !usernameAvailable}
           />
+        </Segment>
+      </Form>
 
-            </Segment>
-
-        </Form>
-        
-
-       <FooterMessage/>
-       </Segment>
-       </Grid.Column>
-       </Grid>
-       </>
-    )
+      <FooterMessage />
+    </>
+  );
 }
 
-export default Signup
+export default Signup;
