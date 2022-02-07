@@ -2,30 +2,25 @@ import React, { createRef } from "react";
 import HeadTags from "./HeadTags";
 import Navbar from "./Navbar";
 import {
-   Container,
+  Container,
   Visibility,
   Grid,
   Sticky,
   Ref,
   Divider,
   Segment
-
 } from "semantic-ui-react";
-import nProgress from "nprogress";
+import nprogress from "nprogress";
 import Router from "next/router";
 import SideMenu from "./SideMenu";
 import Search from "./Search";
 
-
-function Layout({children,user}) {
+function Layout({ children, user }) {
   const contextRef = createRef();
 
-
-  Router.onRouteChangeStart = () => nProgress.start();
-  Router.onRouteChangeComplete = () => nProgress.done();
-  Router.onRouteChangeError = () => nProgress.done();
-
-
+  Router.onRouteChangeStart = () => nprogress.start();
+  Router.onRouteChangeComplete = () => nprogress.done();
+  Router.onRouteChangeError = () => nprogress.done();
 
   return (
     <>
