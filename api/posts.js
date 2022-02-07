@@ -6,10 +6,6 @@ const PostModel = require("../models/PostModel");
 const FollowerModel = require("../models/FollowerModel");
 const uuid = require("uuid").v4;
 
-
-
-
-
 // CREATE A POST
 
 router.post("/", authMiddleware, async (req, res) => {
@@ -36,10 +32,6 @@ router.post("/", authMiddleware, async (req, res) => {
     return res.status(500).send(`Server error`);
   }
 });
-
-
-
-
 
 // GET ALL POSTS
 
@@ -77,10 +69,6 @@ router.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-
-
-
-
 // GET POST BY ID
 
 router.get("/:postId", authMiddleware, async (req, res) => {
@@ -99,10 +87,6 @@ router.get("/:postId", authMiddleware, async (req, res) => {
     return res.status(500).send(`Server error`);
   }
 });
-
-
-
-
 
 // DELETE POST
 
@@ -136,10 +120,6 @@ router.delete("/:postId", authMiddleware, async (req, res) => {
   }
 });
 
-
-
-
-
 // LIKE A POST
 
 router.post("/like/:postId", authMiddleware, async (req, res) => {
@@ -168,10 +148,6 @@ router.post("/like/:postId", authMiddleware, async (req, res) => {
     return res.status(500).send(`Server error`);
   }
 });
-
-
-
-
 
 // UNLIKE A POST
 
@@ -205,11 +181,7 @@ router.put("/unlike/:postId", authMiddleware, async (req, res) => {
   }
 });
 
-
-
-
-
-// GET ALL LIKES OF A POST 
+// GET ALL LIKES OF A POST
 
 router.get("/like/:postId", authMiddleware, async (req, res) => {
   try {
@@ -226,10 +198,6 @@ router.get("/like/:postId", authMiddleware, async (req, res) => {
     return res.status(500).send(`Server error`);
   }
 });
-
-
-
-
 
 // CREATE A COMMENT
 
@@ -262,10 +230,6 @@ router.post("/comment/:postId", authMiddleware, async (req, res) => {
     return res.status(500).send(`Server error`);
   }
 });
-
-
-
-
 
 // DELETE A COMMENT
 
@@ -308,9 +272,5 @@ router.delete("/:postId/:commentId", authMiddleware, async (req, res) => {
     return res.status(500).send(`Server error`);
   }
 });
-
-
-
-
 
 module.exports = router;
