@@ -221,9 +221,10 @@ function Messages({ chatsData, user }) {
               <Grid.Column width={4}>
                 <Comment.Group size="big">
                   <Segment raised style={{ overflow: "auto", maxHeight: "32rem" }}>
-                    {chats.map(chat => (
+                  {chats.map(chat => (
                       <Chat
-                        chat={chat.messagesWith}
+                        key={chat.messagesWith}
+                        chat={chat}
                         connectedUsers={connectedUsers}
                         deleteChat={deleteChat}
                       />

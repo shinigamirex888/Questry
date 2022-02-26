@@ -15,10 +15,10 @@ function Signup() {
     email: "",
     password: "",
     bio: "",
-    linkedin: "",
-    github: "",
+    facebook: "",
+    youtube: "",
     twitter: "",
-    portfolio: ""
+    instagram: ""
   });
 
   const { name, email, password, bio } = user;

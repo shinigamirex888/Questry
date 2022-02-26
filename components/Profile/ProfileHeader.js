@@ -42,32 +42,32 @@ function ProfileHeader({
                     <List.Content content={profile.user.email} />
                   </List.Item>
 
-                  {profile.social.linkedin && (
+                  {profile.social.facebook && (
                     <List.Item>
-                      <List.Icon name="linkedin-alternate" color="blue" />
+                      <List.Icon name="facebook" color="blue" />
                       <List.Content
                         style={{ color: "blue" }}
-                        content={profile.social.linkedin}
+                        content={profile.social.facebook}
                       />
                     </List.Item>
                   )}
 
-                  {profile.social.github && (
+                  {profile.social.instagram && (
                     <List.Item>
-                      <List.Icon name="github" color="black" />
+                      <List.Icon name="instagram" color="red" />
                       <List.Content
                         style={{ color: "blue" }}
-                        content={profile.social.github}
+                        content={profile.social.instagram}
                       />
                     </List.Item>
                   )}
 
-                  {profile.social.portfolio && (
+                  {profile.social.youtube && (
                     <List.Item>
-                      <List.Icon name="certificate" color="black" />
+                      <List.Icon name="youtube" color="red" />
                       <List.Content
                         style={{ color: "blue" }}
-                        content={profile.social.portfolio}
+                        content={profile.social.youtube}
                       />
                     </List.Item>
                   )}
