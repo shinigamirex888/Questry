@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 
-
+// OLD VERSION taught in the course.
+// const server = require("http").Server(app);
+// const io = require("socket.io")(server);
 
 // LATEST VERSION Socket io @4.4.1
 const { createServer } = require("http");

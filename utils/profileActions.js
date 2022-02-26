@@ -42,10 +42,10 @@ export const profileUpdate = async (profile, setLoading, setError, profilePicUrl
 
     await Axios.post(`/update`, {
       bio,
-      linkedin,
-      github,
+      facebook,
+      youtube,
       twitter,
-      portfolio,
+      instagram,
       profilePicUrl
     });
 

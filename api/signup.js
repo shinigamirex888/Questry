@@ -39,10 +39,10 @@ router.post("/", async (req, res) => {
     username,
     password,
     bio,
-    linkedin,
-    github,
+    facebook,
+    youtube,
     twitter,
-    portfolio
+    instagram
   } = req.body.user;
 
   if (!isEmail(email)) return res.status(401).send("Invalid Email");
@@ -80,9 +80,9 @@ router.post("/", async (req, res) => {
     profileFields.bio = bio;
 
     profileFields.social = {};
-    if (linkedin) profileFields.social.linkedin = linkedin;
-    if (github) profileFields.social.github = github;
-    if (portfolio) profileFields.social.portfolio = portfolio;
+    if (facebook) profileFields.social.facebook = facebook;
+    if (youtube) profileFields.social.youtube = youtube;
+    if (instagram) profileFields.social.instagram = instagram;
     if (twitter) profileFields.social.twitter = twitter;
 
     await new ProfileModel(profileFields).save();

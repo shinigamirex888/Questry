@@ -220,7 +220,7 @@ router.post("/update", authMiddleware, async (req, res) => {
   try {
     const { userId } = req;
 
-    const { bio, linkedin, github, twitter, portfolio, profilePicUrl } = req.body;
+    const { bio, facebook, youtube, twitter, instagram, profilePicUrl } = req.body;
 
     let profileFields = {};
     profileFields.user = userId;
@@ -229,11 +229,11 @@ router.post("/update", authMiddleware, async (req, res) => {
 
     profileFields.social = {};
 
-    if (linkedin) profileFields.social.linkedin = linkedin;
+    if (facebook) profileFields.social.facebook = facebook;
 
-    if (github) profileFields.social.github = github;
+    if (youtube) profileFields.social.youtube = youtube;
 
-    if (portfolio) profileFields.social.portfolio = portfolio;
+    if (instagram) profileFields.social.instagram = instagram;
 
     if (twitter) profileFields.social.twitter = twitter;
 
