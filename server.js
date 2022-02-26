@@ -1,23 +1,41 @@
 const express = require("express");
 const app = express();
-const server = require("http").Server(app);
-const io = require("socket.io")(server);
+
+
+
+// LATEST VERSION Socket io @4.4.1
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  /* options */
+});
+
 const next = require("next");
 const dev = process.env.NODE_ENV !== "production";
 const nextApp = next({ dev });
 const handle = nextApp.getRequestHandler();
 require("dotenv").config({ path: "./config.env" });
+
 const connectDb = require("./utilsServer/connectDb");
 connectDb();
+
 app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
-const { addUser, removeUser, findConnectedUser } = require("./utilsServer/roomActions");
+const {
+  addUser,
+  removeUser,
+  findConnectedUser
+} = require("./utilsServer/roomActions");
 const {
   loadMessages,
   sendMsg,
   setMsgToUnread,
   deleteMsg
 } = require("./utilsServer/messageActions");
+
+const { likeOrUnlikePost } = require("./utilsServer/likeOrUnlikePost");
 
 io.on("connection", socket => {
   socket.on("join", async ({ userId }) => {
@@ -29,6 +47,29 @@ io.on("connection", socket => {
         users: users.filter(user => user.userId !== userId)
       });
     }, 10000);
+  });
+
+  socket.on("likePost", async ({ postId, userId, like }) => {
+    const { success, name, profilePicUrl, username, postByUserId, error } =
+      await likeOrUnlikePost(postId, userId, like);
+
+    if (success) {
+      socket.emit("postLiked");
+
+      if (postByUserId !== userId) {
+        const receiverSocket = findConnectedUser(postByUserId);
+
+        if (receiverSocket && like) {
+          // WHEN YOU WANT TO SEND DATA TO ONE PARTICULAR CLIENT
+          io.to(receiverSocket.socketId).emit("newNotificationReceived", {
+            name,
+            profilePicUrl,
+            username,
+            postId
+          });
+        }
+      }
+    }
   });
 
   socket.on("loadMessages", async ({ userId, messagesWith }) => {
@@ -86,10 +127,11 @@ nextApp.prepare().then(() => {
   app.use("/api/profile", require("./api/profile"));
   app.use("/api/notifications", require("./api/notifications"));
   app.use("/api/chats", require("./api/chats"));
+  app.use("/api/reset", require("./api/reset"));
 
   app.all("*", (req, res) => handle(req, res));
 
-  server.listen(PORT, err => {
+  httpServer.listen(PORT, err => {
     if (err) throw err;
     console.log("Express server running");
   });

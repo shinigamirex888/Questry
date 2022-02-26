@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Message, TextArea, Divider } from "semantic-ui-react";
 
 function CommonInputs({
-  user: { bio, linkedin, twitter, github, portfolio },
+  user: { bio, linkedin, portfolio, github, twitter },
   handleChange,
   showSocialLinks,
   setShowSocialLinks
@@ -21,6 +21,7 @@ function CommonInputs({
       <Button
         content="Add Social Links"
         color="aqua"
+        icon="at"
         type="button"
         onClick={() => setShowSocialLinks(!showSocialLinks)}
       />
@@ -64,7 +65,7 @@ function CommonInputs({
             icon="attention"
             info
             size="small"
-            header="Share to gain engagement!!"
+            header="Social Media Links Are Optional!"
           />
         </>
       )}

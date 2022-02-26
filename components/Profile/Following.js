@@ -7,7 +7,12 @@ import axios from "axios";
 import baseUrl from "../../utils/baseUrl";
 import cookie from "js-cookie";
 
-export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId }) => {
+const Following = ({
+  user,
+  loggedUserFollowStats,
+  setUserFollowStats,
+  profileUserId
+}) => {
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
@@ -16,9 +21,12 @@ export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId
     const getFollowing = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${baseUrl}/api/profile/following/${profileUserId}`, {
-          headers: { Authorization: cookie.get("token") }
-        });
+        const res = await axios.get(
+          `${baseUrl}/api/profile/following/${profileUserId}`,
+          {
+            headers: { Authorization: cookie.get("token") }
+          }
+        );
 
         setFollowing(res.data);
       } catch (error) {
@@ -40,9 +48,9 @@ export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId
 
           const isFollowing =
             loggedUserFollowStats.following.length > 0 &&
-            loggedUserFollowStats.following.filter(
+            loggedUserFollowStats.following.some(
               following => following.user === profileFollowing.user._id
-            ).length > 0;
+            );
 
           return (
             <List key={profileFollowing.user._id} divided verticalAlign="middle">
@@ -50,7 +58,7 @@ export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId
                 <List.Content floated="right">
                   {profileFollowing.user._id !== user._id && (
                     <Button
-                      color={isFollowing ? "linkedin" : "twitter"}
+                      color={isFollowing ? "instagram" : "twitter"}
                       icon={isFollowing ? "check" : "add user"}
                       content={isFollowing ? "Following" : "Follow"}
                       disabled={followLoading}
@@ -80,3 +88,5 @@ export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId
     </>
   );
 };
+
+export default Following;

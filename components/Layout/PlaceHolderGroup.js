@@ -8,12 +8,20 @@ import {
   Container,
   Icon
 } from "semantic-ui-react";
-import { range } from "lodash";
+
+const genArray = length => {
+  const newArr = new Array(length);
+
+  for (let i = 0; i < newArr.length; i++) {
+    newArr[i] = i;
+  }
+  return newArr;
+};
 
 export const PlaceHolderPosts = () =>
-  range(1, 3).map(item => (
-    <>
-      <Placeholder key={item} fluid>
+  genArray(3).map(item => (
+    <div key={item}>
+      <Placeholder fluid>
         <Placeholder.Header image>
           <Placeholder.Line />
           <Placeholder.Line />
@@ -26,41 +34,39 @@ export const PlaceHolderPosts = () =>
         </Placeholder.Paragraph>
       </Placeholder>
       <Divider hidden />
-    </>
+    </div>
   ));
 
 export const PlaceHolderSuggestions = () => (
-  <>
-    <List.Item>
-      <Card color="red">
+  <List.Item>
+    <Card color="red">
+      <Placeholder>
+        <Placeholder.Image square />
+      </Placeholder>
+      <Card.Content>
         <Placeholder>
-          <Placeholder.Image square />
+          <Placeholder.Header>
+            <Placeholder.Line length="medium" />
+          </Placeholder.Header>
         </Placeholder>
-        <Card.Content>
-          <Placeholder>
-            <Placeholder.Header>
-              <Placeholder.Line length="medium" />
-            </Placeholder.Header>
-          </Placeholder>
-        </Card.Content>
+      </Card.Content>
 
-        <Card.Content extra>
-          <Button
-            disabled
-            circular
-            size="small"
-            icon="add user"
-            content="Follow"
-            color="twitter"
-          />
-        </Card.Content>
-      </Card>
-    </List.Item>
-  </>
+      <Card.Content extra>
+        <Button
+          disabled
+          circular
+          size="small"
+          icon="add user"
+          content="Follow"
+          color="twitter"
+        />
+      </Card.Content>
+    </Card>
+  </List.Item>
 );
 
 export const PlaceHolderNotifications = () =>
-  range(1, 10).map(item => (
+  genArray(10).map(item => (
     <>
       <Placeholder key={item}>
         <Placeholder.Header image>
@@ -80,7 +86,7 @@ export const EndMessage = () => (
 );
 
 export const LikesPlaceHolder = () =>
-  range(1, 6).map(item => (
+  genArray(6).map(item => (
     <Placeholder key={item} style={{ minWidth: "200px" }}>
       <Placeholder.Header image>
         <Placeholder.Line length="full" />

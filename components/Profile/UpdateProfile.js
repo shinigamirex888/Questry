@@ -9,9 +9,9 @@ function UpdateProfile({ Profile }) {
   const [profile, setProfile] = useState({
     profilePicUrl: Profile.user.profilePicUrl,
     bio: Profile.bio || "",
-    facebook: (Profile.social && Profile.social.linkedin) || "",
-    youtube: (Profile.social && Profile.social.github) || "",
-    instagram: (Profile.social && Profile.social.portfolio) || "",
+    linkedin: (Profile.social && Profile.social.linkedin) || "",
+    github: (Profile.social && Profile.social.github) || "",
+    portfolio: (Profile.social && Profile.social.portfolio) || "",
     twitter: (Profile.social && Profile.social.twitter) || ""
   });
 

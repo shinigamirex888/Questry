@@ -7,7 +7,6 @@ import axios from "axios";
 import baseUrl from "../utils/baseUrl";
 import { registerUser } from "../utils/authUser";
 import uploadPic from "../utils/uploadPicToCloudinary";
-const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
 let cancel;
 
 function Signup() {
@@ -16,10 +15,10 @@ function Signup() {
     email: "",
     password: "",
     bio: "",
-    facebook: "",
-    youtube: "",
+    linkedin: "",
+    github: "",
     twitter: "",
-    instagram: ""
+    portfolio: ""
   });
 
   const { name, email, password, bio } = user;
@@ -28,8 +27,10 @@ function Signup() {
     const { name, value, files } = e.target;
 
     if (name === "media") {
-      setMedia(files[0]);
-      setMediaPreview(URL.createObjectURL(files[0]));
+      if (files && files.length > 0) {
+        setMedia(files[0]);
+        return setMediaPreview(URL.createObjectURL(files[0]));
+      }
     }
 
     setUser(prev => ({ ...prev, [name]: value }));
@@ -70,9 +71,8 @@ function Signup() {
         })
       });
 
-      if (errorMsg !== null) setErrorMsg(null);
-
       if (res.data === "Available") {
+        if (errorMsg !== null) setErrorMsg(null);
         setUsernameAvailable(true);
         setUser(prev => ({ ...prev, username }));
       }
@@ -175,14 +175,7 @@ function Signup() {
             label="Username"
             placeholder="Username"
             value={username}
-            onChange={e => {
-              setUsername(e.target.value);
-              if (regexUserName.test(e.target.value)) {
-                setUsernameAvailable(true);
-              } else {
-                setUsernameAvailable(false);
-              }
-            }}
+            onChange={e => setUsername(e.target.value)}
             fluid
             icon={usernameAvailable ? "check" : "close"}
             iconPosition="left"

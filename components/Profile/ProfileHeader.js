@@ -44,30 +44,30 @@ function ProfileHeader({
 
                   {profile.social.linkedin && (
                     <List.Item>
-                      <List.Icon name="linkedin alternate"  />
+                      <List.Icon name="linkedin-alternate" color="blue" />
                       <List.Content
                         style={{ color: "blue" }}
-                        content={profile.social.facebook}
+                        content={profile.social.linkedin}
                       />
                     </List.Item>
                   )}
 
                   {profile.social.github && (
                     <List.Item>
-                      <List.Icon name="github" />
+                      <List.Icon name="github" color="black" />
                       <List.Content
                         style={{ color: "blue" }}
-                        content={profile.social.instagram}
+                        content={profile.social.github}
                       />
                     </List.Item>
                   )}
 
                   {profile.social.portfolio && (
                     <List.Item>
-                      <List.Icon name="certificate" />
+                      <List.Icon name="certificate" color="black" />
                       <List.Content
                         style={{ color: "blue" }}
-                        content={profile.social.youtube}
+                        content={profile.social.portfolio}
                       />
                     </List.Item>
                   )}
