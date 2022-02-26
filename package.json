@@ -8,7 +8,7 @@
     "url": "https://www.instagram.com/_snehilsneh456"
   },
   "engines": {
-    "node": "6.11.1"
+    "node": "16.13.1"
   },
     "license": "See License in LICENSE",
   "scripts": {
