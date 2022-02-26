@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Message, TextArea, Divider } from "semantic-ui-react";
 
 function CommonInputs({
-  user: { bio, facebook, instagram, youtube, twitter },
+  user: { bio, linkedin, portfolio, github, twitter },
   handleChange,
   showSocialLinks,
   setShowSocialLinks
@@ -20,7 +20,7 @@ function CommonInputs({
 
       <Button
         content="Add Social Links"
-        color="red"
+        color="aqua"
         icon="at"
         type="button"
         onClick={() => setShowSocialLinks(!showSocialLinks)}
@@ -30,10 +30,10 @@ function CommonInputs({
         <>
           <Divider />
           <Form.Input
-            icon="facebook f"
+            icon="linkedin alternate"
             iconPosition="left"
-            name="facebook"
-            value={facebook}
+            name="linkedin"
+            value={linkedin}
             onChange={handleChange}
           />
 
@@ -46,18 +46,18 @@ function CommonInputs({
           />
 
           <Form.Input
-            icon="instagram"
+            icon="github"
             iconPosition="left"
-            name="instagram"
-            value={instagram}
+            name="github"
+            value={github}
             onChange={handleChange}
           />
 
           <Form.Input
-            icon="youtube"
+            icon="certificate"
             iconPosition="left"
-            name="youtube"
-            value={youtube}
+            name="portfolio"
+            value={portfolio}
             onChange={handleChange}
           />
 

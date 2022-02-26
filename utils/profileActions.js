@@ -2,9 +2,8 @@ import axios from "axios";
 import baseUrl from "./baseUrl";
 import catchErrors from "./catchErrors";
 import cookie from "js-cookie";
-import Router from "next/router";
 
-const Axios = axios.create({
+export const Axios = axios.create({
   baseURL: `${baseUrl}/api/profile`,
   headers: { Authorization: cookie.get("token") }
 });
@@ -28,7 +27,9 @@ export const unfollowUser = async (userToUnfollowId, setUserFollowStats) => {
 
     setUserFollowStats(prev => ({
       ...prev,
-      following: prev.following.filter(following => following.user !== userToUnfollowId)
+      following: prev.following.filter(
+        following => following.user !== userToUnfollowId
+      )
     }));
   } catch (error) {
     alert(catchErrors(error));
@@ -41,15 +42,15 @@ export const profileUpdate = async (profile, setLoading, setError, profilePicUrl
 
     await Axios.post(`/update`, {
       bio,
-      facebook,
-      youtube,
+      linkedin,
+      github,
       twitter,
-      instagram,
+      portfolio,
       profilePicUrl
     });
 
     setLoading(false);
-    Router.reload();
+    window.location.reload();
   } catch (error) {
     setError(catchErrors(error));
     setLoading(false);
@@ -67,11 +68,11 @@ export const passwordUpdate = async (setSuccess, userPasswords) => {
   }
 };
 
-export const toggleMessagePopup = async (popupSetting, setPopupSetting, setSuccess) => {
+export const toggleMessagePopup = async (setPopupSetting, setSuccess) => {
   try {
     await Axios.post(`/settings/messagePopup`);
 
-    setPopupSetting(!popupSetting);
+    setPopupSetting(prev => !prev);
     setSuccess(true);
   } catch (error) {
     alert(catchErrors(error));

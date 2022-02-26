@@ -21,9 +21,12 @@ const Following = ({
     const getFollowing = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${baseUrl}/api/profile/following/${profileUserId}`, {
-          headers: { Authorization: cookie.get("token") }
-        });
+        const res = await axios.get(
+          `${baseUrl}/api/profile/following/${profileUserId}`,
+          {
+            headers: { Authorization: cookie.get("token") }
+          }
+        );
 
         setFollowing(res.data);
       } catch (error) {
@@ -45,9 +48,9 @@ const Following = ({
 
           const isFollowing =
             loggedUserFollowStats.following.length > 0 &&
-            loggedUserFollowStats.following.filter(
+            loggedUserFollowStats.following.some(
               following => following.user === profileFollowing.user._id
-            ).length > 0;
+            );
 
           return (
             <List key={profileFollowing.user._id} divided verticalAlign="middle">

@@ -10,6 +10,7 @@ const likeOrUnlikePost = async (postId, userId, like) => {
     const post = await PostModel.findById(postId);
 
     if (!post) return { error: "No post found" };
+    const postByUserId = post.user.toString();
 
     if (like) {
       const isLiked =
@@ -21,8 +22,8 @@ const likeOrUnlikePost = async (postId, userId, like) => {
 
       await post.save();
 
-      if (post.user.toString() !== userId) {
-        await newLikeNotification(userId, postId, post.user.toString());
+      if (postByUserId !== userId) {
+        await newLikeNotification(userId, postId, postByUserId);
       }
     }
     //
@@ -38,8 +39,8 @@ const likeOrUnlikePost = async (postId, userId, like) => {
 
       await post.save();
 
-      if (post.user.toString() !== userId) {
-        await removeLikeNotification(userId, postId, post.user.toString());
+      if (postByUserId !== userId) {
+        await removeLikeNotification(userId, postId, postByUserId);
       }
     }
 
@@ -52,7 +53,7 @@ const likeOrUnlikePost = async (postId, userId, like) => {
       name,
       profilePicUrl,
       username,
-      postByUserId: post.user.toString()
+      postByUserId
     };
   } catch (error) {
     return { error: "Server error" };

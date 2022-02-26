@@ -8,10 +8,10 @@ const ProfileSchema = new Schema(
     bio: { type: String, required: true },
 
     social: {
-      facebook: { type: String },
+      linkedin: { type: String },
       twitter: { type: String },
-      youtube: { type: String },
-      instagram: { type: String }
+      github: { type: String },
+      portfolio: { type: String }
     }
   },
   { timestamps: true }

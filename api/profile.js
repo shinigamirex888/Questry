@@ -23,17 +23,50 @@ router.get("/:username", authMiddleware, async (req, res) => {
 
     const profile = await ProfileModel.findOne({ user: user._id }).populate("user");
 
-    const profileFollowStats = await FollowerModel.findOne({ user: user._id });
+    const profileFollowStats = await FollowerModel.aggregate([
+      { $match: { user: user._id } },
+      {
+        $project: {
+          numberOfFollowers: {
+            $cond: {
+              if: { $isArray: "$followers" },
+              then: { $size: "$followers" },
+              else: "NA"
+            }
+          },
+
+          numberOfFollowing: {
+            $cond: {
+              if: { $isArray: "$following" },
+              then: { $size: "$following" },
+              else: "NA"
+            }
+          }
+        }
+      }
+    ]);
 
     return res.json({
       profile,
-
-      followersLength:
-        profileFollowStats.followers.length > 0 ? profileFollowStats.followers.length : 0,
-
-      followingLength:
-        profileFollowStats.following.length > 0 ? profileFollowStats.following.length : 0
+      followersLength: profileFollowStats[0].numberOfFollowers,
+      followingLength: profileFollowStats[0].numberOfFollowing
     });
+
+    // const profileFollowStats = await FollowerModel.findOne({ user: user._id });
+
+    // return res.json({
+    //   profile,
+
+    //   followersLength:
+    //     profileFollowStats.followers.length > 0
+    //       ? profileFollowStats.followers.length
+    //       : 0,
+
+    //   followingLength:
+    //     profileFollowStats.following.length > 0
+    //       ? profileFollowStats.following.length
+    //       : 0
+    // });
   } catch (error) {
     console.error(error);
     return res.status(500).send("Server Error");
@@ -67,7 +100,9 @@ router.get("/followers/:userId", authMiddleware, async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await FollowerModel.findOne({ user: userId }).populate("followers.user");
+    const user = await FollowerModel.findOne({ user: userId }).populate(
+      "followers.user"
+    );
 
     return res.json(user.followers);
   } catch (error) {
@@ -81,7 +116,9 @@ router.get("/following/:userId", authMiddleware, async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await FollowerModel.findOne({ user: userId }).populate("following.user");
+    const user = await FollowerModel.findOne({ user: userId }).populate(
+      "following.user"
+    );
 
     return res.json(user.following);
   } catch (error) {
@@ -147,8 +184,9 @@ router.put("/unfollow/:userToUnfollowId", authMiddleware, async (req, res) => {
 
     const isFollowing =
       user.following.length > 0 &&
-      user.following.filter(following => following.user.toString() === userToUnfollowId)
-        .length === 0;
+      user.following.filter(
+        following => following.user.toString() === userToUnfollowId
+      ).length === 0;
 
     if (isFollowing) {
       return res.status(401).send("User Not Followed before");
@@ -182,7 +220,7 @@ router.post("/update", authMiddleware, async (req, res) => {
   try {
     const { userId } = req;
 
-    const { bio, facebook, youtube, twitter, instagram, profilePicUrl } = req.body;
+    const { bio, linkedin, github, twitter, portfolio, profilePicUrl } = req.body;
 
     let profileFields = {};
     profileFields.user = userId;
@@ -191,11 +229,11 @@ router.post("/update", authMiddleware, async (req, res) => {
 
     profileFields.social = {};
 
-    if (facebook) profileFields.social.facebook = facebook;
+    if (linkedin) profileFields.social.linkedin = linkedin;
 
-    if (youtube) profileFields.social.youtube = youtube;
+    if (github) profileFields.social.github = github;
 
-    if (instagram) profileFields.social.instagram = instagram;
+    if (portfolio) profileFields.social.portfolio = portfolio;
 
     if (twitter) profileFields.social.twitter = twitter;
 

@@ -1,17 +1,33 @@
 const express = require("express");
 const app = express();
-const server = require("http").Server(app);
-const io = require("socket.io")(server);
+
+
+
+// LATEST VERSION Socket io @4.4.1
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  /* options */
+});
+
 const next = require("next");
 const dev = process.env.NODE_ENV !== "production";
 const nextApp = next({ dev });
 const handle = nextApp.getRequestHandler();
 require("dotenv").config({ path: "./config.env" });
+
 const connectDb = require("./utilsServer/connectDb");
 connectDb();
+
 app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
-const { addUser, removeUser, findConnectedUser } = require("./utilsServer/roomActions");
+const {
+  addUser,
+  removeUser,
+  findConnectedUser
+} = require("./utilsServer/roomActions");
 const {
   loadMessages,
   sendMsg,
@@ -34,14 +50,8 @@ io.on("connection", socket => {
   });
 
   socket.on("likePost", async ({ postId, userId, like }) => {
-    const {
-      success,
-      name,
-      profilePicUrl,
-      username,
-      postByUserId,
-      error
-    } = await likeOrUnlikePost(postId, userId, like);
+    const { success, name, profilePicUrl, username, postByUserId, error } =
+      await likeOrUnlikePost(postId, userId, like);
 
     if (success) {
       socket.emit("postLiked");
@@ -117,11 +127,11 @@ nextApp.prepare().then(() => {
   app.use("/api/profile", require("./api/profile"));
   app.use("/api/notifications", require("./api/notifications"));
   app.use("/api/chats", require("./api/chats"));
-  
+  app.use("/api/reset", require("./api/reset"));
 
   app.all("*", (req, res) => handle(req, res));
 
-  server.listen(PORT, err => {
+  httpServer.listen(PORT, err => {
     if (err) throw err;
     console.log("Express server running");
   });

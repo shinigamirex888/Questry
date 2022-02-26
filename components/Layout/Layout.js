@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React, { useRef } from "react";
 import HeadTags from "./HeadTags";
 import Navbar from "./Navbar";
 import { Container, Visibility, Grid, Sticky, Ref, Segment } from "semantic-ui-react";
@@ -17,7 +17,7 @@ const mediaStyles = AppMedia.createMediaStyle();
 const { Media, MediaContextProvider } = AppMedia;
 
 function Layout({ children, user }) {
-  const contextRef = createRef();
+  const contextRef = useRef();
   const router = useRouter();
 
   const messagesRoute = router.pathname === "/messages";

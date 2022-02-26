@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import axios from "axios";
 import baseUrl from "../utils/baseUrl";
 import { parseCookies } from "nookies";
@@ -19,7 +19,7 @@ const scrollDivToBottom = divRef =>
   divRef.current !== null && divRef.current.scrollIntoView({ behaviour: "smooth" });
 
 function Messages({ chatsData, user }) {
-  const [chats, setChats] = useState(chatsData);
+  const [chats, setChats] = useState(chatsData || []);
   const router = useRouter();
 
   const socket = useRef();
@@ -52,13 +52,6 @@ function Messages({ chatsData, user }) {
         });
       }
     }
-
-    return () => {
-      if (socket.current) {
-        socket.current.emit("disconnect");
-        socket.current.off();
-      }
-    };
   }, []);
 
   // LOAD MESSAGES useEffect
@@ -111,7 +104,9 @@ function Messages({ chatsData, user }) {
           setMessages(prev => [...prev, newMsg]);
 
           setChats(prev => {
-            const previousChat = prev.find(chat => chat.messagesWith === newMsg.receiver);
+            const previousChat = prev.find(
+              chat => chat.messagesWith === newMsg.receiver
+            );
             previousChat.lastMessage = newMsg.msg;
             previousChat.date = newMsg.date;
 
@@ -128,7 +123,9 @@ function Messages({ chatsData, user }) {
           setMessages(prev => [...prev, newMsg]);
 
           setChats(prev => {
-            const previousChat = prev.find(chat => chat.messagesWith === newMsg.sender);
+            const previousChat = prev.find(
+              chat => chat.messagesWith === newMsg.sender
+            );
             previousChat.lastMessage = newMsg.msg;
             previousChat.date = newMsg.date;
 
@@ -139,38 +136,31 @@ function Messages({ chatsData, user }) {
         }
         //
         else {
-          const ifPreviouslyMessaged =
-            chats.filter(chat => chat.messagesWith === newMsg.sender).length > 0;
+          const { name, profilePicUrl } = await getUserInfo(newMsg.sender);
+          senderName = name;
 
-          if (ifPreviouslyMessaged) {
-            setChats(prev => {
-              const previousChat = prev.find(chat => chat.messagesWith === newMsg.sender);
-              previousChat.lastMessage = newMsg.msg;
-              previousChat.date = newMsg.date;
+          const newChat = {
+            messagesWith: newMsg.sender,
+            name,
+            profilePicUrl,
+            lastMessage: newMsg.msg,
+            date: newMsg.date
+          };
 
-              senderName = previousChat.name;
+          setChats(prev => {
+            const previousChat = Boolean(
+              prev.find(chat => chat.messagesWith === newMsg.sender)
+            );
 
+            if (previousChat) {
               return [
-                previousChat,
+                newChat,
                 ...prev.filter(chat => chat.messagesWith !== newMsg.sender)
               ];
-            });
-          }
-
-          //IF NO PREVIOUS CHAT WITH THE SENDER
-          else {
-            const { name, profilePicUrl } = await getUserInfo(newMsg.sender);
-            senderName = name;
-
-            const newChat = {
-              messagesWith: newMsg.sender,
-              name,
-              profilePicUrl,
-              lastMessage: newMsg.msg,
-              date: newMsg.date
-            };
-            setChats(prev => [newChat, ...prev]);
-          }
+            } else {
+              return [newChat, ...prev];
+            }
+          });
         }
 
         newMsgSound(senderName);
@@ -204,6 +194,7 @@ function Messages({ chatsData, user }) {
 
       setChats(prev => prev.filter(chat => chat.messagesWith !== messagesWith));
       router.push("/messages", undefined, { shallow: true });
+      openChatId.current = "";
     } catch (error) {
       alert("Error deleting chat");
     }
@@ -230,10 +221,9 @@ function Messages({ chatsData, user }) {
               <Grid.Column width={4}>
                 <Comment.Group size="big">
                   <Segment raised style={{ overflow: "auto", maxHeight: "32rem" }}>
-                    {chats.map((chat, i) => (
+                    {chats.map(chat => (
                       <Chat
-                        key={i}
-                        chat={chat}
+                        chat={chat.messagesWith}
                         connectedUsers={connectedUsers}
                         deleteChat={deleteChat}
                       />
@@ -284,8 +274,7 @@ function Messages({ chatsData, user }) {
     </>
   );
 }
-
-Messages.getInitialProps = async ctx => {
+export const getServerSideProps = async ctx => {
   try {
     const { token } = parseCookies(ctx);
 
@@ -293,9 +282,9 @@ Messages.getInitialProps = async ctx => {
       headers: { Authorization: token }
     });
 
-    return { chatsData: res.data };
+    return { props: { chatsData: res.data } };
   } catch (error) {
-    return { errorLoading: true };
+    return { props: { errorLoading: true } };
   }
 };
 

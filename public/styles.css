@@ -1,5 +1,5 @@
 :root {
-  --progressBar: #54d1db;
+  --progressBar: aqua;
 }
 
 body {
@@ -37,4 +37,3 @@ body {
   margin: 0;
   padding: 0.5em 1em 0.75em !important;
 }
-
