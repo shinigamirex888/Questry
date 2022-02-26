@@ -1,21 +1,14 @@
-import React,{useState,useEffect,useRef} from 'react'
+import React, { useState, useEffect } from "react";
+import { Form, Button, Message, Segment, Divider } from "semantic-ui-react";
 import { loginUser } from "../utils/authUser";
-
-import { Form,Button,Segment,TextArea,Divider , Grid, Header, Message,} from 'semantic-ui-react';
-
-import baseUrl from './../utils/baseUrl';
-import axios from 'axios';
-import {FooterMessage,HeaderMessage} from "../components/Common/WelcomeMessage"
+import { HeaderMessage, FooterMessage } from "../components/Common/WelcomeMessage";
 import cookie from "js-cookie";
 
-
 function Login() {
-
   const [user, setUser] = useState({
     email: "",
     password: ""
   });
-
 
   const { email, password } = user;
   const [showPassword, setShowPassword] = useState(false);
@@ -23,13 +16,16 @@ function Login() {
   const [formLoading, setFormLoading] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(true);
 
-
   const handleChange = e => {
     const { name, value } = e.target;
 
     setUser(prev => ({ ...prev, [name]: value }));
   };
 
+  useEffect(() => {
+    const isUser = Object.values({ email, password }).every(item => Boolean(item));
+    isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
+  }, [user]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -38,26 +34,15 @@ function Login() {
   };
 
   useEffect(() => {
-    const isUser = Object.values({ email, password }).every(item => Boolean(item));
-    isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
-  }, [user]);
-
-
-  useEffect(() => {
     document.title = "Welcome Back";
     const userEmail = cookie.get("userEmail");
     if (userEmail) setUser(prev => ({ ...prev, email: userEmail }));
   }, []);
 
-
-    return (
-        <>
-        <Grid  centered columns={2}>
-        <Grid.Column>
-          
-          <Segment>
-          <HeaderMessage/>
-          <Form loading={formLoading} error={errorMsg !== null} onSubmit={handleSubmit}>
+  return (
+    <>
+      <HeaderMessage />
+      <Form loading={formLoading} error={errorMsg !== null} onSubmit={handleSubmit}>
         <Message
           error
           header="Oops!"
@@ -102,23 +87,15 @@ function Login() {
             icon="signup"
             content="Login"
             type="submit"
-            color="green"
+            color="orange"
             disabled={submitDisabled}
           />
         </Segment>
       </Form>
-                
-          </Segment>
-          <FooterMessage/>
-        </Grid.Column>
-      </Grid>
 
-
-
-       
-       </>
-    )
-    
+      <FooterMessage />
+    </>
+  );
 }
 
-export default Login
+export default Login;

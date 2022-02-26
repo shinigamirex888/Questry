@@ -42,7 +42,7 @@ function ChatListSearch({ chats, setChats }) {
   const addChat = result => {
     const alreadyInChat =
       chats.length > 0 &&
-      chats.filter(chat => chat.messagesWith === result._id).length > 0;
+      chats.filter(chat => chat.messsagesWith === result._id).length > 0;
 
     if (alreadyInChat) {
       return router.push(`/messages?message=${result._id}`);

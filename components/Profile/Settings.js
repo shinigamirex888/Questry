@@ -64,7 +64,7 @@ function Settings({ newMessagePopup }) {
           </List.Content>
 
           <div style={{ marginTop: "10px" }}>
-            Control Message Alerts.
+            Control whether a Popup should appear when there is a New Message or not.
             <br />
             <br />
             <Checkbox

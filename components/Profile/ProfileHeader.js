@@ -42,9 +42,9 @@ function ProfileHeader({
                     <List.Content content={profile.user.email} />
                   </List.Item>
 
-                  {profile.social.linkedin && (
+                  {profile.social.facebook && (
                     <List.Item>
-                      <List.Icon name="linkedin alternate"  />
+                      <List.Icon name="facebook" color="blue" />
                       <List.Content
                         style={{ color: "blue" }}
                         content={profile.social.facebook}
@@ -52,9 +52,9 @@ function ProfileHeader({
                     </List.Item>
                   )}
 
-                  {profile.social.github && (
+                  {profile.social.instagram && (
                     <List.Item>
-                      <List.Icon name="github" />
+                      <List.Icon name="instagram" color="red" />
                       <List.Content
                         style={{ color: "blue" }}
                         content={profile.social.instagram}
@@ -62,9 +62,9 @@ function ProfileHeader({
                     </List.Item>
                   )}
 
-                  {profile.social.portfolio && (
+                  {profile.social.youtube && (
                     <List.Item>
-                      <List.Icon name="certificate" />
+                      <List.Icon name="youtube" color="red" />
                       <List.Content
                         style={{ color: "blue" }}
                         content={profile.social.youtube}

@@ -37,14 +37,14 @@ export const unfollowUser = async (userToUnfollowId, setUserFollowStats) => {
 
 export const profileUpdate = async (profile, setLoading, setError, profilePicUrl) => {
   try {
-    const { bio, linkedin, github, twitter, portfolio } = profile;
+    const { bio, facebook, youtube, twitter, instagram } = profile;
 
     await Axios.post(`/update`, {
       bio,
-      linkedin,
-      github,
+      facebook,
+      youtube,
       twitter,
-      portfolio,
+      instagram,
       profilePicUrl
     });
 

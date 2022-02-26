@@ -36,7 +36,7 @@ function FollowerNotification({
               size="small"
               compact
               icon={isFollowing ? "check circle" : "add user"}
-              color={isFollowing ? "linkedin" : "twitter"}
+              color={isFollowing ? "instagram" : "twitter"}
               disabled={disabled}
               onClick={async () => {
                 setDisabled(true);

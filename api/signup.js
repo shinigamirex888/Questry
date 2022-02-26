@@ -4,6 +4,7 @@ const UserModel = require("../models/UserModel");
 const ProfileModel = require("../models/ProfileModel");
 const FollowerModel = require("../models/FollowerModel");
 const NotificationModel = require("../models/NotificationModel");
+const ChatModel = require("../models/ChatModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
@@ -31,18 +32,17 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-
 router.post("/", async (req, res) => {
   const {
     name,
+    email,
     username,
-        email,
-        password,
-        bio,
-        linkedin,
-        twitter,
-        github,
-        portfolio,
+    password,
+    bio,
+    facebook,
+    youtube,
+    twitter,
+    instagram
   } = req.body.user;
 
   if (!isEmail(email)) return res.status(401).send("Invalid Email");
@@ -75,14 +75,15 @@ router.post("/", async (req, res) => {
     profileFields.bio = bio;
 
     profileFields.social = {};
-    if (portfolio) profileFields.social.portfolio = portfolio;
-    if (linkedin) profileFields.social.linkedin = linkedin;
-    if (github) profileFields.social.github = github;
+    if (facebook) profileFields.social.facebook = facebook;
+    if (youtube) profileFields.social.youtube = youtube;
+    if (instagram) profileFields.social.instagram = instagram;
     if (twitter) profileFields.social.twitter = twitter;
 
     await new ProfileModel(profileFields).save();
     await new FollowerModel({ user: user._id, followers: [], following: [] }).save();
     await new NotificationModel({ user: user._id, notifications: [] }).save();
+    await new ChatModel({ user: user._id, chats: [] }).save();
 
     const payload = { userId: user._id };
     jwt.sign(payload, process.env.jwtSecret, { expiresIn: "2d" }, (err, token) => {

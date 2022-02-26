@@ -1,7 +1,7 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { List, Image, Search } from "semantic-ui-react";
 import axios from "axios";
-import cookie, { set } from "js-cookie";
+import cookie from "js-cookie";
 import Router from "next/router";
 import baseUrl from "../../utils/baseUrl";
 let cancel;
@@ -13,9 +13,7 @@ function SearchComponent() {
 
   const handleChange = async e => {
     const { value } = e.target;
-    if(value.length === 0)return setText(value)
     setText(value);
-    if (value.trim().length === 0) return;
     setLoading(true);
 
     try {
@@ -30,12 +28,7 @@ function SearchComponent() {
         })
       });
 
-      if (res.data.length === 0){
-        if(results.length>0 && setResults([]) );
-
-
-        return setLoading(false);
-      }
+      if (res.data.length === 0) return setLoading(false);
 
       setResults(res.data);
     } catch (error) {
@@ -44,13 +37,6 @@ function SearchComponent() {
 
     setLoading(false);
   };
-
-
-  useEffect(()=>{
-    if(text.length=== 0 && loading){
-        setLoading(false);
-    }
-  },[text]);
 
   return (
     <Search

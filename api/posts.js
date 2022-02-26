@@ -83,23 +83,19 @@ router.get("/", authMiddleware, async (req, res) => {
     else {
       for (let i = 0; i < loggedUser.following.length; i++) {
         const foundPostsFromFollowing = posts.filter(
-          post =>
-            post.user._id.toString() === loggedUser.following[i].user.toString() 
+          post => post.user._id.toString() === loggedUser.following[i].user.toString()
         );
 
-        if (foundPostsFromFollowing.length > 0) postsToBeSent.push(...foundPostsFromFollowing);
+        if (foundPostsFromFollowing.length > 0)
+          postsToBeSent.push(...foundPostsFromFollowing);
       }
-      
       const foundOwnPosts = posts.filter(post => post.user._id.toString() === userId);
       if (foundOwnPosts.length > 0) postsToBeSent.push(...foundOwnPosts);
-      
-      
     }
 
-     postsToBeSent.length > 0 &&
+    postsToBeSent.length > 0 &&
       postsToBeSent.sort((a, b) => [new Date(b.createdAt) - new Date(a.createdAt)]);
-      
-      
+
     return res.json(postsToBeSent);
   } catch (error) {
     console.error(error);

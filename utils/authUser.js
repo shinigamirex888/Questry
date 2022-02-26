@@ -29,7 +29,6 @@ export const loginUser = async (user, setError, setLoading) => {
   setLoading(false);
 };
 
-
 export const redirectUser = (ctx, location) => {
   if (ctx.req) {
     ctx.res.writeHead(302, { Location: location });

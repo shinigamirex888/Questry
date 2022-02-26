@@ -7,7 +7,12 @@ import axios from "axios";
 import baseUrl from "../../utils/baseUrl";
 import cookie from "js-cookie";
 
-export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId }) => {
+const Followers = ({
+  user,
+  loggedUserFollowStats,
+  setUserFollowStats,
+  profileUserId
+}) => {
   const [followers, setFollowers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
@@ -50,7 +55,7 @@ export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId
                 <List.Content floated="right">
                   {profileFollower.user._id !== user._id && (
                     <Button
-                      color={isFollowing ? "linkedin" : "twitter"}
+                      color={isFollowing ? "instagram" : "twitter"}
                       icon={isFollowing ? "check" : "add user"}
                       content={isFollowing ? "Following" : "Follow"}
                       disabled={followLoading}
@@ -80,3 +85,5 @@ export default ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId
     </>
   );
 };
+
+export default Followers;
