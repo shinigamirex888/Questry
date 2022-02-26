@@ -7,6 +7,9 @@
     "email": "snehilsneh888@gmail.com",
     "url": "https://www.instagram.com/_snehilsneh456"
   },
+  "engines": {
+    "node": "16.13.1"
+  },
     "license": "See License in LICENSE",
   "scripts": {
     "dev": "nodemon server.js",
